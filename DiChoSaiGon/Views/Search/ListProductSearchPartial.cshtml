@@ -1,0 +1,25 @@
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<DiChoSaiGon.Models.Product>
+@{
+    int PageCurrent = ViewBag.CurrentPage;
+    int PageNext = PageCurrent + 1;
+}
+
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+            <tr>
+                <td>
+                    <img class="img-full" src="~/images/products/@item.Thumb" alt="Product Image" style="width:200px; height=200px">
+                </td>
+                <td>@item.ProductName</td>
+                <td>@item.Cat.CatName</td>
+                <td>@item.Price.Value.ToString("#,##0") VNĐ</td>
+                <td>@item.UnitInStock</td>
+            </tr>
+        
+    }
+
+}
+

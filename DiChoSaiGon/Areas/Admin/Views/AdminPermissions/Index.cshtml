@@ -1,0 +1,204 @@
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<DiChoSaiGon.Models.Permission>
+@{
+    int CurrentPage = ViewBag.CurrentPage;
+    ViewData["Title"] = "Danh sách quyền";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    bool QuanLyQuyenTruyCap = User.Claims.Any(c => c.Type == "FunctionId11" && c.Value == "11");
+    bool CanCreate = User.Claims.Any(c => c.Type == "CanCreate11" && c.Value == "True");
+    bool CanEdit = User.Claims.Any(c => c.Type == "CanEdit11" && c.Value == "True");
+    bool CanRead = User.Claims.Any(c => c.Type == "CanRead11" && c.Value == "True");
+    bool CanDelete = User.Claims.Any(c => c.Type == "CanDelete11" && c.Value == "True");
+
+    <div class="page-header">
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                <a class="breadcrumb-item" asp-area="Admin" asp-controller="AdminPermissions" asp-action="Index">Danh sách quyền</a>
+                <span class="breadcrumb-item active">Danh sách quyền : page @CurrentPage</span>
+            </nav>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row m-b-30">
+                <div class="col-lg-8">
+                    <div class="d-md-flex">
+                        <div class="m-b-10 m-r-15">
+                            <select class="custom-select" id="txtRoleID" name="txtRoleID" style="min-width: 200px;" asp-items="ViewBag.Role">
+                                <option selected>Chọn Role</option>
+                            </select>
+                        </div>
+                        @* <div class="m-b-10 m-r-15">
+                        <select class="custom-select" id="txtFunctionID" name="txtFunctionId" style="min-width: 200px;" asp-items="ViewBag.Function">
+                            <option selected>Chọn chức năng</option>
+                        </select>
+                    </div> *@
+                    </div>
+                </div>
+                @if(QuanLyQuyenTruyCap && CanCreate){
+                    <div class="col-lg-4 text-right">
+                        <a class="btn btn-primary" asp-area="Admin" asp-controller="AdminPermissions" asp-action="Create"><i class="anticon anticon-plus-circle m-r-5"></i> <span>Add Permission</span></a>
+                    </div>
+                }
+                
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover e-commerce-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Role</th>
+                            <th>Function</th>
+                            <th>AccessPermission</th>
+                            <th>CanCreate</th>
+                            <th>CanRead</th>
+                            <th>CanEdit</th>
+                            <th>CanDelete</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody id="records_table">
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.PermissionId</td>
+                                    <td>@item.Role.RoleName</td>
+                                    <td>@item.Function.FunctionName</td>
+                                    <td>
+                                        @if (item.AccessPermission == true)
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-success badge-dot m-r-10"></div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-danger badge-dot m-r-10"></div>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.CanCreate == true)
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-success badge-dot m-r-10"></div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-danger badge-dot m-r-10"></div>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.CanRead == true)
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-success badge-dot m-r-10"></div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-danger badge-dot m-r-10"></div>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.CanEdit == true)
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-success badge-dot m-r-10"></div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-danger badge-dot m-r-10"></div>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.CanDelete == true)
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-success badge-dot m-r-10"></div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-danger badge-dot m-r-10"></div>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td></td>
+
+
+
+                                    <td>
+                                        @if(QuanLyQuyenTruyCap && CanEdit){
+                                            <a class="btn btn-secondary m-r-5" asp-area="Admin" asp-controller="AdminPermissions" asp-action="Edit" asp-route-id="@item.PermissionId">Edit</a>
+                                        }
+                                        
+                                        @if (QuanLyQuyenTruyCap && CanDelete) {
+                                            <a class="btn btn-success m-r-5" asp-area="Admin" asp-controller="AdminPermissions" asp-action="Delete" asp-route-id="@item.PermissionId">Delete</a>
+                                        }
+                                        
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <div aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <pager class="pager-container" list="@Model" asp-area="Admin" asp-controller="AdminCustomers" asp-route-CatID="@ViewBag.CurrentCatID" asp-action="Index" />
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            jQuery("#txtRoleID").change(function () {
+                var roleID = jQuery(this).children(":selected").attr("value");
+                roleID = parseFloat(roleID);
+                $('#txtRoleID option').removeAttr('selected');
+                $("#txtRoleID > [value=" + roleID + "]").attr("selected", "true");
+
+                $.ajax({
+                    url: '/Admin/AdminPermissions/Filter',
+                    datatype: "json",
+                    type: "GET",
+                    data: {
+                        RoleID: roleID
+                    },
+                    async: true,
+                    success: function (results) {
+                        if (results.status == "success") {
+                            window.location.href = results.redirectUrl;
+                        }
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                    }
+                });
+            });
+
+        });
+
+    </script>
+}

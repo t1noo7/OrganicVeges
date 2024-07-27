@@ -1,0 +1,43 @@
+﻿@model List<Order>
+@if(Model != null && Model.Count() > 0)
+{
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th>ID</th>
+                        <th>Ngày đặt</th>
+                        <th>Ngày ship</th>
+                        <th>Trạng thái</th>
+                        <th>Tổng tiền</th>
+                    </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><a class="account-order-id" href="javascript:void(0)">@item.OrderId</a></td>
+                        <td>@item.OrderDate</td>
+                        <td>@item.ShipDate</td>
+                        <td>@item.TransactStatus.Status</td>
+                        <td>@item.TotalMoney</td>
+                        <td>
+                            <a class="xemdonhang" href="javascript:void(0)" data-madonhang="@item.OrderId"><span>View</span></a>
+                        </td>
+                    </tr>
+                    
+                }
+                </tbody>
+            </table>
+
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <hr/>
+            <div id="records-table"></div>
+    </div>
+}
+else
+{
+    <p>Chưa có đơn hàng</p>
+}
+

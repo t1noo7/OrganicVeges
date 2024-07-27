@@ -1,0 +1,89 @@
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<DiChoSaiGon.Models.Order>
+@{
+    int CurrentPage = ViewBag.CurrentPage;
+    ViewData["Title"] = "Danh sách đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    bool QuanLyDonHang = User.Claims.Any(c => c.Type == "FunctionId2" && c.Value == "2");
+    bool CanCreate = User.Claims.Any(c => c.Type == "CanCreate2" && c.Value == "True");
+    bool CanEdit = User.Claims.Any(c => c.Type == "CanEdit2" && c.Value == "True");
+    bool CanRead = User.Claims.Any(c => c.Type == "CanRead2" && c.Value == "True");
+    bool CanDelete = User.Claims.Any(c => c.Type == "CanDelete2" && c.Value == "True");
+
+    <div class="page-header">
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                <span class="breadcrumb-item active">Danh sách đơn hàng : page @CurrentPage</span>
+            </nav>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row m-b-30">
+                <div class="col-lg-8">
+                    <div class="d-md-flex">
+                        <div class="m-b-10 m-r-15">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover e-commerce-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Đơn hàng</th>
+                            <th>Ngày mua</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                            <th>#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.OrderId</td>
+                                    <td>@item.Customer.FullName</td>
+                                    <td>@item.OrderDate</td>
+                                    <td>@item.TotalMoney.ToString("#,##0") VNĐ</td>
+                                    <td>@item.TransactStatus.Status</td>
+
+                                    <td>
+                                        @if(QuanLyDonHang && CanRead){
+                                            <a class="btn btn-primary m-r-5" asp-area="Admin" asp-controller="AdminOrders" asp-action="Details" asp-route-id="@item.OrderId">View</a>
+                                        }
+                                        
+                                        <a  class="btn btn-primary m-r-5" asp-area="Admin" asp-controller="AdminOrders" asp-action="ChangeStatus" asp-route-id="@item.OrderId">Change Status</a>
+                                        @if (QuanLyDonHang && CanEdit) {
+                                            <a class="btn btn-secondary m-r-5" asp-area="Admin" asp-controller="AdminOrders" asp-action="Edit" asp-route-id="@item.OrderId">Edit</a>
+                                        }
+                                        
+                                        @if (QuanLyDonHang && CanDelete) {
+                                            <a class="btn btn-success m-r-5" asp-area="Admin" asp-controller="AdminOrders" asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
+                                        }
+                                        
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <div aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <pager class="pager-container" list="@Model" asp-area="Admin" asp-controller="AdminOrders" asp-action="Index" />
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

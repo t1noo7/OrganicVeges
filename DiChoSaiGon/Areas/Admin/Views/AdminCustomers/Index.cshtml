@@ -1,0 +1,78 @@
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<DiChoSaiGon.Models.Customer>
+@{
+    int CurrentPage = ViewBag.CurrentPage;
+    ViewData["Title"] = "Danh sách khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    bool QuanLyKhachHang = User.Claims.Any(c => c.Type == "FunctionId1" && c.Value == "1");
+    bool CanCreate = User.Claims.Any(c => c.Type == "CanCreate1" && c.Value == "True");
+    bool CanEdit = User.Claims.Any(c => c.Type == "CanEdit1" && c.Value == "True");
+    bool CanRead = User.Claims.Any(c => c.Type == "CanRead1" && c.Value == "True");
+    bool CanDelete = User.Claims.Any(c => c.Type == "CanDelete1" && c.Value == "True");
+
+    <div class="page-header">
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                <span class="breadcrumb-item active">Danh sách khách hàng : page @CurrentPage</span>
+            </nav>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-hover e-commerce-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Họ và tên</th>
+                            <th>Địa chỉ</th>
+                            <th>Tỉnh/Thành</th>
+                            <th>#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.CustomerId</td>
+                                    <td>
+                                        <p>@item.FullName</p>
+                                        <p>@item.Phone</p>
+                                        <p>@item.Email</p>
+
+                                    </td>
+                                    <td>@item.Address</td>
+                                    <td>@item.Location.Name</td>
+                                    <td>
+                                        @if(QuanLyKhachHang && CanRead){
+                                            <a class="btn btn-primary m-r-5" asp-area="Admin" asp-controller="AdminCustomers" asp-action="Details" asp-route-id="@item.CustomerId">View</a>
+                                        }
+                                       
+                                        
+                                        @if (QuanLyKhachHang && CanDelete) {
+                                            <a class="btn btn-success m-r-5" asp-area="Admin" asp-controller="AdminCustomers" asp-action="Delete" asp-route-id="@item.CustomerId">Delete</a>
+                                        }
+                                        
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <div aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <pager class="pager-container" list="@Model" asp-area="Admin" asp-controller="AdminCustomers" asp-action="Index" />
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}

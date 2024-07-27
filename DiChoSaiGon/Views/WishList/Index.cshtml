@@ -1,0 +1,140 @@
+﻿@model DiChoSaiGon.Models.Customer
+
+@{
+    ViewData["Title"] = Model.FullName + "'s wishlist";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<WishList> wishList = ViewBag.WishList;
+}
+
+<main class="main-content">
+    <div class="breadcrumb-area breadcrumb-height" data-bg-image="assets/images/banner/2-1-1920x523.jpg">
+        <div class="container h-100">
+            <div class="row h-100">
+                <div class="col-lg-12">
+                    <div class="breadcrumb-item">
+                        <h1 class="breadcrumb-heading">@Model.FullName.ToUpper() 'S WISHLIST</h1>
+                        <ul>
+                            <li>
+                                <a href="/">Home <i class="pe-7s-angle-right"></i></a>
+                            </li>
+                            <li>@Model.FullName.ToUpper() 'S WISHLIST</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cart-area section-space-y-axis-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    @if (wishList != null && wishList.Count() > 0)
+                    {
+                        <form action="javascript:void(0)">
+                            <div class="table-content table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="product_remove">remove</th>
+                                            <th class="product-thumbnail">images</th>
+                                            <th class="cart-product-name">Product</th>
+                                            <th class="product-price">Unit Price</th>
+                                            <th class="product-quantity">#</th>
+                                            <th class="product-add-to-cart">Shopping</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (wishList != null && wishList.Count() > 0)
+                                        {
+                                            foreach (var item in wishList)
+                                            {
+                                                <tr>
+                                                    <td class="product_remove">
+                                                        <input type="button" value="X" class="removeWL  btn btn-primary" data-mahh="@item.ProductId" />
+                                                    </td>
+                                                    <td class="product-thumbnail">
+                                                        <a href="javascript:void(0)">
+                                                            <img src="~/images/products/@item.Product.Thumb" alt="@item.Product.Title">
+                                                        </a>
+                                                    </td>
+                                                    <td class="product-name"><a href="javascript:void(0)">@item.Product.ProductName</a></td>
+                                                    <td class="product-price"><span class="amount">@item.Product.Price.Value.ToString("#,##0") VNĐ</span></td>
+                                                    <td class="quantity" data-goodsQuantity="@item.Quantity"></td>
+                                                    <td class="add-to-cart">
+                                                        <a class="btn btn-custom-size lg-size btn-primary btn-secondary-hover rounded-0" href="cart.html">Add to cart</a>
+                                                        <input type="hidden" asp-for="@item.ProductId" />
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <p>No product here!</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Function to handle adding an item to the cart
+            function addToCart(productId, quantity) {
+                $.ajax({
+                    url: '/api/cart/add',
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        productID: productId,
+                        quantity: quantity
+                    },
+                    success: function (response) {
+                        loadHeaderCart();
+                        window.location = "wishlist.html";
+                    },
+                    error: function (error) {
+                    }
+                });
+            }
+            $(".removeWL").click(function () {
+                var productid = $(this).attr("data-mahh");
+                $.ajax({
+                    url: "Wishlist/remove",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        productID: productid,
+                    },
+                    success: function (result) {
+                        if (result.success) {
+                            window.location = "wishlist.html";
+                        }
+                    },
+                    error: function (rs) {
+                    }
+                });
+            });
+            // Event handler for add-to-cart button clicks
+            $(".add-to-cart").click(function () {
+                // Find the closest row (parent <tr>) of the clicked button
+                var row = $(this).closest('tr');
+
+                // Get the productId and quantity from data attributes
+                var productId = row.find('.add-to-cart input[type="hidden"]').val();
+                var quantity = row.find('.quantity').data('goodsquantity');
+
+                // Call addToCart function with productId and quantity
+                addToCart(productId, quantity);
+            });
+        });
+
+
+    </script>
+}

@@ -1,0 +1,138 @@
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<DiChoSaiGon.Models.Post>
+@{
+    int CurrentPage = ViewBag.CurrentPage;
+    ViewData["Title"] = "Danh sách tin tức";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    bool QuanLyTinTuc = User.Claims.Any(c => c.Type == "FunctionId6" && c.Value == "6");
+    bool CanCreate = User.Claims.Any(c => c.Type == "CanCreate6" && c.Value == "True");
+    bool CanEdit = User.Claims.Any(c => c.Type == "CanEdit6" && c.Value == "True");
+    bool CanRead = User.Claims.Any(c => c.Type == "CanRead6" && c.Value == "True");
+    bool CanDelete = User.Claims.Any(c => c.Type == "CanDelete6" && c.Value == "True");
+
+    <div class="page-header">
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                <span class="breadcrumb-item active">Danh sách tin tức : page @CurrentPage</span>
+            </nav>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row m-b-30">
+                <div class="col-lg-8">
+                    <div class="d-md-flex">
+                        <div class="m-b-10 m-r-15">
+                        </div>
+                    </div>
+                </div>
+                @if(QuanLyTinTuc && CanCreate){
+                    <div class="col-lg-4 text-right">
+                        <a class="btn btn-primary" asp-area="Admin" asp-controller="AdminPosts" asp-action="Create"><i class="anticon anticon-plus-circle m-r-5"></i> <span>Add Post</span></a>
+                    </div>
+                }
+                
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover e-commerce-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tiêu đề</th>
+                            <th>Ngày tạo</th>
+                            <th>isHot</th>
+                            <th>isNewFeed</th>
+                            <th>Trạng thái</th>
+                            <th>#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.PostId</td>
+                                    <td>@item.Title</td>
+                                    <td>@item.CreateDate</td>
+                                    <td>
+                                        @if (item.Published == true)
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-success badge-dot m-r-10"></div>
+                                                <div>Public</div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-success badge-dot m-r-10"></div>
+                                                <div>Non-Public</div>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.IsHot == true)
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-success badge-dot m-r-10"></div>
+                                                <div>Hot</div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-success badge-dot m-r-10"></div>
+                                                <div>Non-Hot</div>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.IsNewFeed == true)
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-success badge-dot m-r-10"></div>
+                                                <div>NewFeed</div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <div class="badge badge-success badge-dot m-r-10"></div>
+                                                <div>Non-NewFeed</div>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if(QuanLyTinTuc && CanRead){
+                                            <a class="btn btn-primary m-r-5" asp-area="Admin" asp-controller="AdminPosts" asp-action="Details" asp-route-id="@item.PostId">View</a>
+                                        }
+                                        
+                                        @if (QuanLyTinTuc && CanEdit) {
+                                            <a class="btn btn-secondary m-r-5" asp-area="Admin" asp-controller="AdminPosts" asp-action="Edit" asp-route-id="@item.PostId">Edit</a>
+                                        }
+                                        
+                                        @if (QuanLyTinTuc && CanDelete) {
+                                            <a class="btn btn-success m-r-5" asp-area="Admin" asp-controller="AdminPosts" asp-action="Delete" asp-route-id="@item.PostId">Delete</a>
+                                        }
+                                        
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <div aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <pager class="pager-container" list="@Model" asp-area="Admin" asp-controller="AdminPosts" asp-action="Index" />
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}

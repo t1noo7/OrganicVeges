@@ -1,0 +1,177 @@
+﻿
+<div class="side-nav">
+    <div class="side-nav-inner">
+        <ul class="side-nav-menu scrollable">
+            @if (User.Identity.IsAuthenticated)
+            {
+                bool QuanLyKhachHang = User.Claims.Any(c => c.Type == "FunctionId1" && c.Value == "1");
+                bool QuanLyDonHang = User.Claims.Any(c => c.Type == "FunctionId2" && c.Value == "2");
+                bool QuanLyBanner = User.Claims.Any(c => c.Type == "FunctionId3" && c.Value == "3");
+                bool QuanLySanPham = User.Claims.Any(c => c.Type == "FunctionId4" && c.Value == "4");
+                bool QuanLyDoanhSo = User.Claims.Any(c => c.Type == "FunctionId5" && c.Value == "5");
+                bool QuanLyTinTuc = User.Claims.Any(c => c.Type == "FunctionId6" && c.Value == "6");
+                bool QuanLyPage = User.Claims.Any(c => c.Type == "FunctionId7" && c.Value == "7");
+                bool QuanLyTaiKhoanAdmin = User.Claims.Any(c => c.Type == "FunctionId8" && c.Value == "8");
+                bool QuanLyDanhMuc = User.Claims.Any(c => c.Type == "FunctionId9" && c.Value == "9");
+                bool QuanLyRole = User.Claims.Any(c => c.Type == "FunctionId10" && c.Value == "10");
+                bool QuanLyQuyenTruyCap = User.Claims.Any(c => c.Type == "FunctionId11" && c.Value == "11");
+                bool QuanLyHeThong = User.Claims.Any(c => c.Type == "FunctionId12" && c.Value == "12");
+                bool hasPermission1 = User.Claims.Any(c => c.Type == "AccessPermission1" && c.Value == "True");
+                bool hasPermission2 = User.Claims.Any(c => c.Type == "AccessPermission2" && c.Value == "True");
+                bool hasPermission3 = User.Claims.Any(c => c.Type == "AccessPermission3" && c.Value == "True");
+                bool hasPermission4 = User.Claims.Any(c => c.Type == "AccessPermission4" && c.Value == "True");
+                bool hasPermission5 = User.Claims.Any(c => c.Type == "AccessPermission5" && c.Value == "True");
+                bool hasPermission6 = User.Claims.Any(c => c.Type == "AccessPermission6" && c.Value == "True");
+                bool hasPermission7 = User.Claims.Any(c => c.Type == "AccessPermission7" && c.Value == "True");
+                bool hasPermission8 = User.Claims.Any(c => c.Type == "AccessPermission8" && c.Value == "True");
+                bool hasPermission9 = User.Claims.Any(c => c.Type == "AccessPermission9" && c.Value == "True");
+                bool hasPermission10 = User.Claims.Any(c => c.Type == "AccessPermission10" && c.Value == "True");
+                bool hasPermission11 = User.Claims.Any(c => c.Type == "AccessPermission11" && c.Value == "True");
+                bool hasPermission12 = User.Claims.Any(c => c.Type == "AccessPermission12" && c.Value == "True");
+
+                <li class="nav-item">
+                    <a class="dropdown-toggle" asp-area="Admin" asp-controller="Home" asp-action="Index">
+                        <span class="icon-holder">
+                            <i class="anticon anticon-dashboard"></i>
+                        </span>
+                        <span class="title">Dashboard</span>
+                        <span class="arrow">
+                            <i class="arrow-icon"></i>
+                        </span>
+                    </a>
+                </li>
+                @if(QuanLyBanner && hasPermission3)
+                {
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle" asp-area="Admin" asp-controller="AdminBanners" asp-action="Index">
+                        <span class="icon-holder">
+                            <i class="anticon anticon-pie-chart"></i>
+                        </span>
+                        <span class="title">Quản lý banner</span>
+                    </a>
+                </li>
+                }
+
+                @if (QuanLyDonHang && hasPermission2) // Kiểm tra quyền để hiển thị hoặc ẩn chức năng
+                {
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle" asp-area="Admin" asp-controller="AdminOrders" asp-action="Index">
+                            <span class="icon-holder">
+                                <i class="anticon anticon-pie-chart"></i>
+                            </span>
+                            <span class="title">Quản lý đơn hàng</span>
+                        </a>
+                    </li>
+                }
+                @if (QuanLySanPham && hasPermission4){
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle" asp-area="Admin" asp-controller="AdminProducts" asp-action="Index">
+                            <span class="icon-holder">
+                                <i class="anticon anticon-build"></i>
+                            </span>
+                            <span class="title">Quản lý sản phẩm</span>
+                            <span class="arrow">
+                            </span>
+                        </a>
+                    </li>
+                }
+                
+                @if (QuanLyKhachHang && hasPermission1){
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle" asp-area="Admin" asp-controller="AdminCustomers" asp-action="Index">
+                            <span class="icon-holder">
+                                <i class="anticon anticon-hdd"></i>
+                            </span>
+                            <span class="title">Quản lý khách hàng</span>
+                            <span class="arrow">
+                            </span>
+                        </a>
+                    </li>
+                }
+                
+                @* <li class="nav-item dropdown">
+                    <a class="dropdown-toggle" href="javascript:void(0);">
+                        <span class="icon-holder">
+                            <i class="anticon anticon-form"></i>
+                        </span>
+                        <span class="title">Doanh số</span>
+                        <span class="arrow">
+                            <i class="arrow-icon"></i>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="form-elements.html">Form Elements</a>
+                        </li>
+                        <li>
+                            <a href="form-layouts.html">Form Layouts</a>
+                        </li>
+                        <li>
+                            <a href="form-validation.html">Form Validation</a>
+                        </li>
+                    </ul>
+                </li> *@
+                @if (QuanLyHeThong && hasPermission12){
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle" href="javascript:void(0);">
+                            <span class="icon-holder">
+                                <i class="anticon anticon-table"></i>
+                            </span>
+                            <span class="title">Quản lý hệ thống</span>
+                            <span class="arrow">
+                                <i class="arrow-icon"></i>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            @if(QuanLyTaiKhoanAdmin && hasPermission8){
+                            <li>
+                                <a asp-area="Admin" asp-controller="AdminAccounts" asp-action="Index">Quản lý tài khoản</a>
+                            </li>
+                            }
+                            @if (QuanLyDanhMuc && hasPermission9){
+                                <li>
+                                    <a asp-area="Admin" asp-controller="AdminCategories" asp-action="Index">Quản lý danh mục</a>
+                                </li>
+                            }
+                            @if(QuanLyRole && hasPermission10){
+                                <li>
+                                    <a asp-area="Admin" asp-controller="AdminRoles" asp-action="Index">Quản lý Role</a>
+                                </li>
+                            }
+                            @if (QuanLyQuyenTruyCap && hasPermission11)
+                            {
+                                <li>
+                                    <a asp-area="Admin" asp-controller="AdminPermissions" asp-action="Index">Quản lý quyền truy cập chức năng</a>
+                                </li>
+                            }
+                            
+                        </ul>
+                    </li>
+                }
+                @if(QuanLyTinTuc && hasPermission6){
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle" asp-area="Admin" asp-controller="AdminPosts" asp-action="Index">
+                            <span class="icon-holder">
+                                <i class="anticon anticon-pie-chart"></i>
+                            </span>
+                            <span class="title">Quản lý tin tức</span>
+                        </a>
+                    </li>
+                }
+                
+                @if (QuanLyPage && hasPermission7) // Kiểm tra quyền để hiển thị hoặc ẩn chức năng
+                {
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle" asp-area="Admin" asp-controller="AdminPages" asp-action="Index">
+                            <span class="icon-holder">
+                                <i class="anticon anticon-file"></i>
+                            </span>
+                            <span class="title">Quản lý Page</span>
+                        </a>
+                    </li>
+                }
+                
+            }
+        </ul>
+    </div>
+</div>

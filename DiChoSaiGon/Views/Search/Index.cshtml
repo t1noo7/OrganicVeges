@@ -1,0 +1,89 @@
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<DiChoSaiGon.Models.Product>
+@{
+    //Category category = ViewBag.CurrentCat;
+    ViewData["Title"] = "Tìm kiếm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int PageCurrent = ViewBag.CurrentPage;
+    int PageNext = PageCurrent + 1;
+}
+
+<div class="input-affix m-v-4">
+    <i class="prefix-icon anticon anticon-search opacity-04"></i>
+    <input id="keyword" name="keyword" type="text" class="form-control" placeholder="Tìm kiếm">
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover e-commerce-table">
+        <thead>
+            <tr>
+                <th>Ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Danh mục</th>
+                <th>Giá</th>
+                <th>Tồn kho</th>
+            </tr>
+        </thead>
+        <tbody id="records_table">
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <img class="img-full" src="~/images/products/@item.Thumb" alt="Product Image" style="width:200px; height=200px">
+                        </td>
+                        <td>@item.ProductName</td>
+                        <td>@item.Cat.CatName</td>
+                        <td>@item.Price.Value.ToString("#,##0") VNĐ</td>
+                        <td>@item.UnitInStock</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <div aria-label="Page navigation example" class="pagination justify-content-center">
+        <pager class="pager-container" options="@PagedListRenderOptions.Bootstrap4PageNumbersOnly" list="@Model" asp-area="" asp-controller="Search" />
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var typingTimer;               
+            var doneTypingInterval = 1000;  
+
+            // Hàm xử lý khi người dùng ngừng gõ
+            function doneTyping() {
+                var strkeyword = $('#keyword').val();
+                $.ajax({
+                    url: '/Search/FindProduct/',
+                    dataType: "html",
+                    type: "POST",
+                    data: { keyword: strkeyword },
+                    success: function (results) {
+                        $("#records_table").html("");
+                        $("#records_table").html(results);
+
+                        // Cập nhật lại phân trang
+                        var newPagination = $(".pagination", results); // Lấy phân trang từ dữ liệu trả về
+                        $(".pagination").replaceWith(newPagination);
+                    },
+                    error: function (xhr, status, error) {
+                        alert('error');
+                        console.log(status,error);
+                    }
+                });
+            }
+
+      
+            $("#keyword").keyup(function () {
+                clearTimeout(typingTimer);
+                if ($('#keyword').val()) {
+                    typingTimer = setTimeout(doneTyping, doneTypingInterval);
+                }
+            });
+        });
+
+    </script>
+}
